@@ -1,8 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * koa项目准备的用户鉴权
- */
 const request_1 = require("./utils/request");
 class KoaMiddleware {
     constructor(opts) {
@@ -15,25 +12,13 @@ class KoaMiddleware {
     async init() {
         this.STATE = 1;
     }
-    /**
-     * 鉴权
-     */
     auth() {
-        request_1.get(this.baseUrl + '/api_user/open/auth', {});
+        request_1.get(this.baseUrl + '/open/auth', {});
     }
-    /**
-     * 登录
-     */
     login() {
-        request_1.post(this.baseUrl + '/api_user/open/login', {});
+        request_1.post(this.baseUrl + '/open/login', {});
     }
-    /**
-     * 获取用户详情
-     */
     getInfo() { }
-    /**
-     * 检查是否有权限
-     */
     checkRule(rule) { }
 }
 let KoaCache = null;

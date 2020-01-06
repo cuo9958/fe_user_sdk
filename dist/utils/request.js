@@ -16,7 +16,10 @@ async function post(url, data) {
     if (res_data.status !== 200) {
         throw new Error('登录失败');
     }
-    return res_data.data;
+    const res = res_data.data;
+    if (res.code === 1)
+        return res.data;
+    throw new Error(res.msg);
 }
 exports.post = post;
 async function get(url, data) {
@@ -26,6 +29,9 @@ async function get(url, data) {
     if (res_data.status !== 200) {
         throw new Error('登录失败');
     }
-    return res_data.data;
+    const res = res_data.data;
+    if (res.code === 1)
+        return res.data;
+    throw new Error(res.msg);
 }
 exports.get = get;
