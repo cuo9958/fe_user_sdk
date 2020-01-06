@@ -78,6 +78,14 @@ class ReactSDK {
             fn && fn();
         }
     }
+    info() {
+        const uid = localStorage.getItem('uid');
+        const token = localStorage.getItem('token');
+        const headimg = localStorage.getItem('headimg');
+        const nickname = localStorage.getItem('nickname');
+        const rules = localStorage.getItem('rules');
+        return { uid, token, headimg, nickname, rules };
+    }
     check(name) {
         const rules = localStorage.getItem('rules');
         if (!rules)

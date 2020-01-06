@@ -6,8 +6,29 @@ import { get } from './utils/request';
 
 const MAX_REQ = 0;
 
-class ReactSDK {
-    constructor(opts: any) {
+interface IOpts {
+    baseUrl: string;
+    apiUrl: string;
+    loginUrl: string;
+}
+
+interface IModel {
+    uid: string;
+    token: string;
+    headimg: string;
+    nickname: string;
+    rules: string;
+}
+interface IReactSDK {
+    init(): void;
+    auth(fn: any): void;
+    info(): IModel;
+    check(name: string | string[]): void;
+    login(): void;
+}
+
+class ReactSDK implements IReactSDK {
+    constructor(opts: IOpts) {
         this.baseUrl = opts.baseUrl || '';
         this.apiUrl = this.baseUrl + opts.apiUrl;
         this.loginUrl = this.baseUrl + opts.loginUrl;
@@ -88,6 +109,15 @@ class ReactSDK {
             fn && fn();
         }
     }
+
+    info() {
+        const uid = localStorage.getItem('uid');
+        const token = localStorage.getItem('token');
+        const headimg = localStorage.getItem('headimg');
+        const nickname = localStorage.getItem('nickname');
+        const rules = localStorage.getItem('rules');
+        return { uid, token, headimg, nickname, rules };
+    }
     /**
      * 校验是否有权限
      * @param name 权限key
@@ -115,12 +145,12 @@ class ReactSDK {
         localStorage.setItem('rules', '');
     }
 }
-let ReactCache: any = null;
+let ReactCache: IReactSDK = null;
 /**
  *
  * @param opts url
  */
-export function factory(opts: any) {
+export function factory(opts: IOpts) {
     if (!ReactCache) {
         ReactCache = new ReactSDK(opts);
     }
