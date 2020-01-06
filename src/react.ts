@@ -7,7 +7,7 @@ import { get } from './utils/request';
 const MAX_REQ = 0;
 
 interface IOpts {
-    baseUrl: string;
+    baseUrl?: string;
     apiUrl: string;
     loginUrl: string;
 }
