@@ -26,7 +26,7 @@ interface IReactSDK {
     init(): void;
     auth(err: any, success: any): void;
     info(): IModel;
-    check(name: string | string[]): void;
+    check(name: string | string[]): boolean;
     login(): void;
 }
 
@@ -77,7 +77,8 @@ class ReactSDK implements IReactSDK {
             this._fgAuth(err, success);
         } else {
             this.authCount++;
-            if (this.authCount > MAX_REQ) this._idAuth(err, success);
+            console.log('鉴权次数', this.authCount);
+            if (this.authCount > MAX_REQ || this.authCount <= 1) this._idAuth(err, success);
         }
     }
     /**
