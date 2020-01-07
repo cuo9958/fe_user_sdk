@@ -44,9 +44,9 @@ class ReactSDK {
             this._fgAuth(err, success);
         }
         else {
-            this.authCount++;
-            if (this.authCount > MAX_REQ)
+            if (this.authCount > MAX_REQ || this.authCount == 0)
                 this._idAuth(err, success);
+            this.authCount++;
         }
     }
     async _fgAuth(err, success) {
@@ -67,7 +67,7 @@ class ReactSDK {
         }
     }
     async _idAuth(err, success) {
-        this.authCount = 0;
+        this.authCount = 1;
         try {
             const uid = localStorage.getItem('uid') || '';
             const token = localStorage.getItem('token') || '';
@@ -107,6 +107,7 @@ class ReactSDK {
         }
     }
     login() {
+        this.logout();
         let url = '';
         if (this.loginUrl.includes('?')) {
             url = this.loginUrl + '&cb=' + encodeURIComponent(window.location.href);

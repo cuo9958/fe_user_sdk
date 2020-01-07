@@ -76,9 +76,9 @@ class ReactSDK implements IReactSDK {
         if (!uid || !token) {
             this._fgAuth(err, success);
         } else {
+            // console.log('鉴权次数', this.authCount);
+            if (this.authCount > MAX_REQ || this.authCount == 0) this._idAuth(err, success);
             this.authCount++;
-            console.log('鉴权次数', this.authCount);
-            if (this.authCount > MAX_REQ || this.authCount <= 1) this._idAuth(err, success);
         }
     }
     /**
@@ -103,7 +103,7 @@ class ReactSDK implements IReactSDK {
      * uid、token鉴权
      */
     async _idAuth(err: any, success: any) {
-        this.authCount = 0;
+        this.authCount = 1;
         try {
             const uid = localStorage.getItem('uid') || '';
             const token = localStorage.getItem('token') || '';
@@ -147,6 +147,7 @@ class ReactSDK implements IReactSDK {
      * 去登录
      */
     login() {
+        this.logout();
         let url = '';
         if (this.loginUrl.includes('?')) {
             url = this.loginUrl + '&cb=' + encodeURIComponent(window.location.href);

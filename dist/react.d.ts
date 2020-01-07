@@ -14,7 +14,7 @@ interface IReactSDK {
     init(): void;
     auth(err: any, success: any): void;
     info(): IModel;
-    check(name: string | string[]): void;
+    check(name: string | string[]): boolean;
     login(): void;
 }
 export declare function factory(opts: IOpts): IReactSDK;
