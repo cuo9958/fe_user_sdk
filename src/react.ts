@@ -4,7 +4,10 @@
 import Finger from 'fingerprintjs2';
 import { get } from './utils/request';
 
-const MAX_REQ = 0;
+/**
+ * 远程请求间隔次数
+ */
+const MAX_REQ = 20;
 
 interface IOpts {
     baseUrl?: string;
@@ -21,7 +24,7 @@ interface IModel {
 }
 interface IReactSDK {
     init(): void;
-    auth(fn: any): void;
+    auth(err: any, success: any): void;
     info(): IModel;
     check(name: string | string[]): void;
     login(): void;
@@ -45,7 +48,13 @@ class ReactSDK implements IReactSDK {
     async init() {
         let uuid = localStorage.getItem('uuid');
         if (!uuid) {
-            const data = await Finger.getPromise();
+            const opts = {
+                preprocessor: (k, v) => {
+                    console.log(k, v);
+                    return v;
+                }
+            };
+            const data = await Finger.getPromise(opts);
             const values = data.map(function(c) {
                 return c.value;
             });
@@ -61,20 +70,20 @@ class ReactSDK implements IReactSDK {
      * 2.网络请求是否登录
      * 3.返回结果
      */
-    auth(fn: any) {
+    auth(err: any, success: any) {
         const uid = localStorage.getItem('uid');
         const token = localStorage.getItem('token');
         if (!uid || !token) {
-            this._fgAuth(fn);
+            this._fgAuth(err, success);
         } else {
             this.authCount++;
-            if (this.authCount > MAX_REQ) this._idAuth(fn);
+            if (this.authCount > MAX_REQ) this._idAuth(err, success);
         }
     }
     /**
      * 指纹鉴权
      */
-    async _fgAuth(fn: any) {
+    async _fgAuth(err: any, success: any) {
         if (!this.uuid) return;
         try {
             const model = await get(this.apiUrl + '/open/auth', { uuid: this.uuid });
@@ -83,6 +92,7 @@ class ReactSDK implements IReactSDK {
             localStorage.setItem('headimg', model.headimg);
             localStorage.setItem('nickname', model.nickname);
             localStorage.setItem('rules', model.rules);
+            success && success(model);
         } catch (error) {
             console.log(error);
             this.logout();
@@ -91,7 +101,7 @@ class ReactSDK implements IReactSDK {
     /**
      * uid、token鉴权
      */
-    async _idAuth(fn: any) {
+    async _idAuth(err: any, success: any) {
         this.authCount = 0;
         try {
             const uid = localStorage.getItem('uid') || '';
@@ -103,10 +113,11 @@ class ReactSDK implements IReactSDK {
             localStorage.setItem('headimg', model.headimg);
             localStorage.setItem('nickname', model.nickname);
             localStorage.setItem('rules', model.rules);
+            success && success(model);
         } catch (error) {
             console.log(error);
             this.logout();
-            fn && fn();
+            err && err();
         }
     }
 
@@ -135,7 +146,13 @@ class ReactSDK implements IReactSDK {
      * 去登录
      */
     login() {
-        window.location.href = this.loginUrl;
+        let url = '';
+        if (this.loginUrl.includes('?')) {
+            url = this.loginUrl + '&cb=' + encodeURIComponent(window.location.href);
+        } else {
+            url = this.loginUrl + '?cb=' + encodeURIComponent(window.location.href);
+        }
+        window.location.href = url;
     }
     logout() {
         localStorage.setItem('uid', '');

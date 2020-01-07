@@ -1,5 +1,5 @@
 interface IOpts {
-    baseUrl: string;
+    baseUrl?: string;
     apiUrl: string;
     loginUrl: string;
 }
@@ -12,7 +12,7 @@ interface IModel {
 }
 interface IReactSDK {
     init(): void;
-    auth(fn: any): void;
+    auth(err: any, success: any): void;
     info(): IModel;
     check(name: string | string[]): void;
     login(): void;

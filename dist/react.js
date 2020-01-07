@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const fingerprintjs2_1 = __importDefault(require("fingerprintjs2"));
 const request_1 = require("./utils/request");
-const MAX_REQ = 0;
+const MAX_REQ = 20;
 class ReactSDK {
     constructor(opts) {
         this.baseUrl = '';
@@ -21,7 +21,13 @@ class ReactSDK {
     async init() {
         let uuid = localStorage.getItem('uuid');
         if (!uuid) {
-            const data = await fingerprintjs2_1.default.getPromise();
+            const opts = {
+                preprocessor: (k, v) => {
+                    console.log(k, v);
+                    return v;
+                }
+            };
+            const data = await fingerprintjs2_1.default.getPromise(opts);
             const values = data.map(function (c) {
                 return c.value;
             });
@@ -30,19 +36,19 @@ class ReactSDK {
         }
         this.uuid = uuid;
     }
-    auth(fn) {
+    auth(err, success) {
         const uid = localStorage.getItem('uid');
         const token = localStorage.getItem('token');
         if (!uid || !token) {
-            this._fgAuth(fn);
+            this._fgAuth(err, success);
         }
         else {
             this.authCount++;
             if (this.authCount > MAX_REQ)
-                this._idAuth(fn);
+                this._idAuth(err, success);
         }
     }
-    async _fgAuth(fn) {
+    async _fgAuth(err, success) {
         if (!this.uuid)
             return;
         try {
@@ -52,13 +58,14 @@ class ReactSDK {
             localStorage.setItem('headimg', model.headimg);
             localStorage.setItem('nickname', model.nickname);
             localStorage.setItem('rules', model.rules);
+            success && success(model);
         }
         catch (error) {
             console.log(error);
             this.logout();
         }
     }
-    async _idAuth(fn) {
+    async _idAuth(err, success) {
         this.authCount = 0;
         try {
             const uid = localStorage.getItem('uid') || '';
@@ -71,11 +78,12 @@ class ReactSDK {
             localStorage.setItem('headimg', model.headimg);
             localStorage.setItem('nickname', model.nickname);
             localStorage.setItem('rules', model.rules);
+            success && success(model);
         }
         catch (error) {
             console.log(error);
             this.logout();
-            fn && fn();
+            err && err();
         }
     }
     info() {
@@ -98,7 +106,14 @@ class ReactSDK {
         }
     }
     login() {
-        window.location.href = this.loginUrl;
+        let url = '';
+        if (this.loginUrl.includes('?')) {
+            url = this.loginUrl + '&cb=' + encodeURIComponent(window.location.href);
+        }
+        else {
+            url = this.loginUrl + '?cb=' + encodeURIComponent(window.location.href);
+        }
+        window.location.href = url;
     }
     logout() {
         localStorage.setItem('uid', '');
