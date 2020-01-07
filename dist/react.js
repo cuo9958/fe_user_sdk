@@ -23,7 +23,8 @@ class ReactSDK {
         if (!uuid) {
             const opts = {
                 preprocessor: (k, v) => {
-                    console.log(k, v);
+                    if (k === 'deviceMemory')
+                        return 0;
                     return v;
                 }
             };
