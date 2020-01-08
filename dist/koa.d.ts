@@ -1,6 +1,1 @@
-interface IOptions {
-    url: string;
-    token: string;
-}
-export declare function KoaMiddle(opts: IOptions): any;
-export {};
+export declare function simple(err: any): (ctx: any, next: any) => void;
