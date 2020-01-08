@@ -6,7 +6,7 @@ export function simple(err: any) {
     return (ctx: any, next: any) => {
         const { uid, token } = ctx.headers;
         if (!uid || !token) {
-            err && err();
+            err && err(ctx);
         } else {
             next();
         }

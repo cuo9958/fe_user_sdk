@@ -4,7 +4,7 @@ function simple(err) {
     return (ctx, next) => {
         const { uid, token } = ctx.headers;
         if (!uid || !token) {
-            err && err();
+            err && err(ctx);
         }
         else {
             next();
