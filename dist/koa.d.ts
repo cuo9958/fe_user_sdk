@@ -1,1 +1,1 @@
-export declare function simple(err: any): (ctx: any, next: any) => void;
+export declare function simple(err: any): (ctx: any, next: any) => Promise<void>;

@@ -3,12 +3,12 @@
  * @param err 错误返回
  */
 export function simple(err: any) {
-    return (ctx: any, next: any) => {
+    return async (ctx: any, next: any) => {
         const { uid, token } = ctx.headers;
         if (!uid || !token) {
             err && err(ctx);
         } else {
-            next();
+            await next();
         }
     };
 }
