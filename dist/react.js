@@ -110,10 +110,10 @@ class ReactSDK {
         this.logout();
         let url = '';
         if (this.loginUrl.includes('?')) {
-            url = this.loginUrl + '&cb=' + encodeURIComponent(window.location.href);
+            url = this.loginUrl + '&cb=' + encodeURIComponent(window.location.href) + '&uuid=' + this.uuid;
         }
         else {
-            url = this.loginUrl + '?cb=' + encodeURIComponent(window.location.href);
+            url = this.loginUrl + '?cb=' + encodeURIComponent(window.location.href) + '&uuid=' + this.uuid;
         }
         window.location.href = url;
     }
