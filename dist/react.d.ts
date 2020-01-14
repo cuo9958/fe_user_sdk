@@ -10,6 +10,7 @@ interface IModel {
     nickname: string;
     rules: string;
     username: string;
+    tell: string;
 }
 interface IReactSDK {
     init(): void;

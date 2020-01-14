@@ -49,17 +49,21 @@ class ReactSDK {
             this.authCount++;
         }
     }
+    _setInfo(model) {
+        localStorage.setItem('uid', model.uid);
+        localStorage.setItem('token', model.token);
+        localStorage.setItem('headimg', model.headimg);
+        localStorage.setItem('nickname', model.nickname);
+        localStorage.setItem('rules', model.rules);
+        localStorage.setItem('username', model.username);
+        localStorage.setItem('tell', model.mobile);
+    }
     async _fgAuth(err, success) {
         if (!this.uuid)
             return;
         try {
             const model = await request_1.get(this.apiUrl + '/open/auth', { uuid: this.uuid });
-            localStorage.setItem('uid', model.uid);
-            localStorage.setItem('token', model.token);
-            localStorage.setItem('headimg', model.headimg);
-            localStorage.setItem('nickname', model.nickname);
-            localStorage.setItem('rules', model.rules);
-            localStorage.setItem('username', model.username);
+            this._setInfo(model);
             success && success(model);
         }
         catch (error) {
@@ -75,12 +79,7 @@ class ReactSDK {
             if (!uid || !token)
                 return;
             const model = await request_1.get(this.apiUrl + '/open/auth', { uid, token });
-            localStorage.setItem('uid', model.uid);
-            localStorage.setItem('token', model.token);
-            localStorage.setItem('headimg', model.headimg);
-            localStorage.setItem('nickname', model.nickname);
-            localStorage.setItem('rules', model.rules);
-            localStorage.setItem('username', model.username);
+            this._setInfo(model);
             success && success(model);
         }
         catch (error) {
@@ -96,7 +95,8 @@ class ReactSDK {
         const nickname = localStorage.getItem('nickname');
         const rules = localStorage.getItem('rules');
         const username = localStorage.getItem('username');
-        return { uid, token, headimg, nickname, rules, username };
+        const tell = localStorage.getItem('tell');
+        return { uid, token, headimg, nickname, rules, username, tell };
     }
     check(name) {
         const rules = localStorage.getItem('rules');

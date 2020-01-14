@@ -22,6 +22,7 @@ interface IModel {
     nickname: string;
     rules: string;
     username: string;
+    tell: string;
 }
 interface IReactSDK {
     init(): void;
@@ -82,6 +83,15 @@ class ReactSDK implements IReactSDK {
             this.authCount++;
         }
     }
+    _setInfo(model) {
+        localStorage.setItem('uid', model.uid);
+        localStorage.setItem('token', model.token);
+        localStorage.setItem('headimg', model.headimg);
+        localStorage.setItem('nickname', model.nickname);
+        localStorage.setItem('rules', model.rules);
+        localStorage.setItem('username', model.username);
+        localStorage.setItem('tell', model.mobile);
+    }
     /**
      * 指纹鉴权
      */
@@ -89,12 +99,7 @@ class ReactSDK implements IReactSDK {
         if (!this.uuid) return;
         try {
             const model = await get(this.apiUrl + '/open/auth', { uuid: this.uuid });
-            localStorage.setItem('uid', model.uid);
-            localStorage.setItem('token', model.token);
-            localStorage.setItem('headimg', model.headimg);
-            localStorage.setItem('nickname', model.nickname);
-            localStorage.setItem('rules', model.rules);
-            localStorage.setItem('username', model.username);
+            this._setInfo(model);
             success && success(model);
         } catch (error) {
             console.log(error);
@@ -111,12 +116,7 @@ class ReactSDK implements IReactSDK {
             const token = localStorage.getItem('token') || '';
             if (!uid || !token) return;
             const model = await get(this.apiUrl + '/open/auth', { uid, token });
-            localStorage.setItem('uid', model.uid);
-            localStorage.setItem('token', model.token);
-            localStorage.setItem('headimg', model.headimg);
-            localStorage.setItem('nickname', model.nickname);
-            localStorage.setItem('rules', model.rules);
-            localStorage.setItem('username', model.username);
+            this._setInfo(model);
             success && success(model);
         } catch (error) {
             console.log(error);
@@ -132,7 +132,8 @@ class ReactSDK implements IReactSDK {
         const nickname = localStorage.getItem('nickname');
         const rules = localStorage.getItem('rules');
         const username = localStorage.getItem('username');
-        return { uid, token, headimg, nickname, rules, username };
+        const tell = localStorage.getItem('tell');
+        return { uid, token, headimg, nickname, rules, username, tell };
     }
     /**
      * 校验是否有权限
