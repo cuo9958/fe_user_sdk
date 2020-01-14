@@ -94,6 +94,7 @@ class ReactSDK implements IReactSDK {
             localStorage.setItem('headimg', model.headimg);
             localStorage.setItem('nickname', model.nickname);
             localStorage.setItem('rules', model.rules);
+            localStorage.setItem('username', model.username);
             success && success(model);
         } catch (error) {
             console.log(error);
@@ -115,6 +116,7 @@ class ReactSDK implements IReactSDK {
             localStorage.setItem('headimg', model.headimg);
             localStorage.setItem('nickname', model.nickname);
             localStorage.setItem('rules', model.rules);
+            localStorage.setItem('username', model.username);
             success && success(model);
         } catch (error) {
             console.log(error);
