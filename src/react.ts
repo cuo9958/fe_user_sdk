@@ -21,6 +21,7 @@ interface IModel {
     headimg: string;
     nickname: string;
     rules: string;
+    username: string;
 }
 interface IReactSDK {
     init(): void;
@@ -128,7 +129,8 @@ class ReactSDK implements IReactSDK {
         const headimg = localStorage.getItem('headimg');
         const nickname = localStorage.getItem('nickname');
         const rules = localStorage.getItem('rules');
-        return { uid, token, headimg, nickname, rules };
+        const username = localStorage.getItem('username');
+        return { uid, token, headimg, nickname, rules, username };
     }
     /**
      * 校验是否有权限

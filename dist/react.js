@@ -93,7 +93,8 @@ class ReactSDK {
         const headimg = localStorage.getItem('headimg');
         const nickname = localStorage.getItem('nickname');
         const rules = localStorage.getItem('rules');
-        return { uid, token, headimg, nickname, rules };
+        const username = localStorage.getItem('username');
+        return { uid, token, headimg, nickname, rules, username };
     }
     check(name) {
         const rules = localStorage.getItem('rules');

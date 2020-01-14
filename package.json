@@ -1,6 +1,6 @@
 {
   "name": "@dal/fe_user_sdk",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "",
   "main": "dist/index.js",
   "scripts": {

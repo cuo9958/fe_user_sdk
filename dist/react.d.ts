@@ -9,6 +9,7 @@ interface IModel {
     headimg: string;
     nickname: string;
     rules: string;
+    username: string;
 }
 interface IReactSDK {
     init(): void;
